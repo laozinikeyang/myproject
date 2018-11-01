@@ -5,6 +5,7 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
@@ -13,7 +14,9 @@
         http://www.springframework.org/schema/mvc 
         http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd 
         http://www.springframework.org/schema/task 
-        http://www.springframework.org/schema/task/spring-task-4.2.xsd">
+        http://www.springframework.org/schema/task/spring-task-4.2.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
 
 	<!-- 使用注解开发，不用配置controller，需要配置一个组件扫描器 -->
 	<context:component-scan
@@ -26,5 +29,5 @@
 		<!-- 文件的后缀名 -->
 		<property name="suffix" value=".jsp"></property>
 	</bean>
-
+	<aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
 </beans>
