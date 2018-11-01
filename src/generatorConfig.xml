@@ -5,11 +5,11 @@
 		<jdbcConnection
 			connectionURL="jdbc:mysql://localhost:3306/myproject"
 			driverClass="com.mysql.jdbc.Driver" password="root" userId="root" />
-		<javaModelGenerator targetPackage="sqlmapping"
+		<javaModelGenerator targetPackage="entity"
 			targetProject="myproject" />
-		<sqlMapGenerator targetPackage="sqlmapping"
+		<sqlMapGenerator targetPackage="dao"
 			targetProject="myproject" />
-		<javaClientGenerator targetPackage="sqlmapping"
+		<javaClientGenerator targetPackage="dao"
 			targetProject="myproject" type="XMLMAPPER" />
 		<table tableName="%" enableCountByExample="false"
 			enableUpdateByExample="false" enableDeleteByExample="false"
