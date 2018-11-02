@@ -37,4 +37,11 @@ public class TestController {
 		mav.setViewName("error");;
 		return mav;
 	}
+	@RequestMapping(value="test1.spring")
+	public ModelAndView test1(ModelAndView mav,String abc) {
+		
+		mav.setViewName("bootstrap");;
+		return mav;
+	}
+	
 }
