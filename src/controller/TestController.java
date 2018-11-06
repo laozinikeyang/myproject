@@ -40,7 +40,7 @@ public class TestController {
 	@RequestMapping(value="test1.spring")
 	public ModelAndView test1(ModelAndView mav,String abc) {
 		
-		mav.setViewName("bootstrap");;
+		mav.setViewName("NewFile");;
 		return mav;
 	}
 	
