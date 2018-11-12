@@ -25,22 +25,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<div id="navbar" class="navbar-collapse collapse">
 							<ul class="nav navbar-nav">
 								<li><a href="<%=basePath %>index">首页</a></li>
-								
 								<li><a href="<%=basePath %>login/user">权限设置</a></li>
-								
-								
 								<li><a href="<%=basePath %>question">维护问卷</a></li>
-								
-								
 								<li><a href="<%=basePath %>role/mainView">角色设置</a></li>
-								
-								
 								<li><a href="<%=basePath %>question/me">我的问卷</a></li>
-								
 								<li><a href="<%=basePath %>per/mainView">权限设置</a></li>
-								
-								
-								
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
 								<li>
