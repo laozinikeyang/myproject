@@ -26,6 +26,8 @@ public class TestController {
 	
 	
 	@Autowired QuestionnaireService questionService;
+	@RequestMapping(value="/test.spring")
+	public String test() {return "question";}
 	/**
 	 * 保存问卷主页面
 	 * @param mainTitle

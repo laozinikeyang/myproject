@@ -10,6 +10,7 @@
 	java.util.Date nowDate = new java.util.Date();
 	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	String spdfDate = sdf.format(nowDate);
+	String socketPath = request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 <!DOCTYPE html>
 <html>
@@ -27,6 +28,7 @@
 <body>
 	<!-- 这是导航条 -->
 	<jsp:include page="./menu.jsp"></jsp:include>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-4 col-md-4 col-sm-12 ">
@@ -39,49 +41,50 @@
 					aria-controls="collapseFind">搜索</button>
 			</div>
 		</div>
-		<div class="collapse" id="collapseNewQuestion">
+
+		<div class="collapse" id="collapseFind">
 			<div class="well">
-				<form class="form-inline" method="post" id="newQuestion">
-					<div class="form-group">
-						<label for="mainTitle">问卷标题:</label> <input type="text"
-							class="form-control" id="mainTitle" name="mainTitle"
-							placeholder="关于某某什么的问卷调查">
-					</div>
-					<div class="form-group date" id="datetimepicker">
-						<label for="mainEndtime">截止日期:</label> <input type="text"
-							class="form-control" id="mainEndtime" name="mainEndtime"
-							readonly="readonly">
-					</div>
-					<script type="text/javascript">
+				<form action="" class="form-inline" method="get">
+					<label for="mainTitleSS">问卷标题：</label> <input name="mainTitle"
+						id="mainTitleSS" type="text" class="form-control" placeholder="" />
+					<label for="mainCreatSS">创建时间：</label> <input name="mainStartTime"
+						id="mainCreatSS" type="text" class="form-control" placeholder="" />
+					<label for="mainEndtimeSS">截止时间：</label> <input name="mainOverTime"
+						id="mainEndtimeSS" type="text" class="form-control" placeholder="" />
+					<button class="btn btn-primary" type="submit">搜索</button>
+				</form>
+				<script type="text/javascript">
 							jeDate({
-								dateCell:"#mainEndtime",
+								dateCell:"#mainCreatSS",
 								format:"YYYY-MM-DD",
 								isinitVal:true,
 								isTime:false, //isClear:false,
-								minDate:"<%=spdfDate%>
-						",
-							okfun : function(val) {
-								alert(val)
-							}
-						})
+								minDate:"2000-01-01",
+								okfun:function(val){alert(val)}
+							})
+							jeDate({
+								dateCell:"#mainEndtimeSS",
+								format:"YYYY-MM-DD",
+								isinitVal:true,
+								isTime:false, //isClear:false,
+								minDate:"2000-01-01",
+								okfun:function(val){alert(val)}
+							})
 					</script>
-					<button type="submit" class="btn btn-info">保存</button>
-				</form>
 			</div>
 		</div>
 
 	</div>
-	<footer class="footer navbar-fixed-bottom ">
-		<div class="container" style="background-color: #000000">
-			<div class="row">
-				<div class="col-sm-12">
-					<span><a href="http://www.mrkj.com/">明日科技</a></span> | <span>Copyright
-						&copy; <a href="http://www.mrkj.com/">吉林省明日科技有限公司</a>
-					</span> | <span>吉ICP备16003039号-1</span> <span>站长QQ:80303857</span>
-				</div>
-			</div>
-		</div>
-	</footer>
 
+
+	<script type="text/javascript">
+		var basePath = '<%=basePath%>';
+		var socketPath = '<%=socketPath%>
+		';
+	</script>
+	<!-- jquery.min.js必须放bootstrap-3.3.7-dist/js/bootstrap.min.js上面 -->
+	<script src="js/jquery.min.js"></script>
+	<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+	<script src="js/question.js?v=5.1"></script>
 </body>
 </html>

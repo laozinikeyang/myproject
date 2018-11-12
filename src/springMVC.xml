@@ -19,7 +19,8 @@
         http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
 
 	<!-- 使用注解开发，不用配置controller，需要配置一个组件扫描器 -->
-	<context:component-scan base-package="controller"></context:component-scan>
+	<context:component-scan
+		base-package="controller"></context:component-scan>
 	<!-- 视图解析器 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -28,5 +29,7 @@
 		<!-- 文件的后缀名 -->
 		<property name="suffix" value=".jsp"></property>
 	</bean>
+
+	
 	<aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
 </beans>

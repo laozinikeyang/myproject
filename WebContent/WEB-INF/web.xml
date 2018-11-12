@@ -40,7 +40,7 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>springMVC</servlet-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern>*.spring</url-pattern>
 	</servlet-mapping>
 
 	<listener>
