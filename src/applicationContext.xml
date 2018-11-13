@@ -21,9 +21,14 @@
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
 	<context:component-scan base-package="service"></context:component-scan>
+	<context:component-scan base-package="standard"></context:component-scan>
+	<bean id="simpleDateFormat" class="java.text.SimpleDateFormat">
+		<constructor-arg value="yyyy-MM-dd" />
+	</bean>
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver"></property>
 		<property name="url"
 			value="jdbc:mysql://localhost:3306/myproject"></property>
 		<property name="username" value="root"></property>
@@ -45,5 +50,5 @@
 		<property name="basePackage" value="dao"></property>
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
-
+	
 </beans>

@@ -10,14 +10,82 @@
     <result column="main_creatuser" jdbcType="VARCHAR" property="mainCreatuser" />
     <result column="main_creatdep" jdbcType="INTEGER" property="mainCreatdep" />
   </resultMap>
+  <resultMap type="java.util.Map" id="CountMap">
+  	<result column="count(main_id)" property="count" jdbcType="DECIMAL" />
+  </resultMap>
   <sql id="Base_Column_List">
     main_id, main_title, main_creat, main_isuse, main_endtime, main_creatuser, main_creatdep
   </sql>
+  <!-- 分页查询  前台后台通用 如果前台请求传递 mainEndtime 参数即可，参数的值无所谓。 -->
+  <select id="selectPage" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_main
+    <where >
+      <if test="mainId != null" >
+        main_id LIKE CONCAT(CONCAT('%', #{mainId,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainTitle != null" >
+        and main_title LIKE CONCAT(CONCAT('%', #{mainTitle,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainCreat != null" >
+        and main_creat LIKE CONCAT(CONCAT('%', #{mainCreat,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainEndtime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_endtime &gt;= NOW()
+      </if>
+      <if test="mainIsuse != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_isuse = 'y'
+      </if>
+      <if test="mainStartTime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and #{mainCreat,jdbcType=DATE} &gt;= main_creat
+      </if>
+      <if test="mainOverTime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and #{mainOverTime,jdbcType=DATE} &lt;= main_creat
+      </if>
+      <if test="mainCreatuser != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_creatuser = #{mainCreatuser,jdbcType=DATE} 
+      </if>
+    </where>
+     order by main_creat desc
+     limit #{page,jdbcType=INTEGER},#{row,jdbcType=INTEGER}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from questionnaire_main
     where main_id = #{mainId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectCount" resultMap="CountMap" parameterType="java.util.Map">
+    select
+    	count(main_id)
+    from questionnaire_main
+    <where >
+      <if test="mainId != null" >
+        main_id LIKE CONCAT(CONCAT('%', #{mainId,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainTitle != null" >
+        and main_title LIKE CONCAT(CONCAT('%', #{mainTitle,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainCreat != null" >
+        and main_creat LIKE CONCAT(CONCAT('%', #{mainCreat,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="mainEndtime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_endtime &gt;= NOW()
+      </if>
+      <if test="mainIsuse != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_isuse = 'y'
+      </if>
+      <if test="mainStartTime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and #{mainCreat,jdbcType=DATE} &gt;= main_creat
+      </if>
+      <if test="mainOverTime != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and #{mainOverTime,jdbcType=DATE} &lt;= main_creat
+      </if>
+      <if test="mainCreatuser != null" >  <!-- 这只是一个状态，如果参数里有mainEndtime那么就确定这是来时于前台的请求。 -->
+        and main_creatuser = #{mainCreatuser,jdbcType=DATE} 
+      </if>
+    </where>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from questionnaire_main

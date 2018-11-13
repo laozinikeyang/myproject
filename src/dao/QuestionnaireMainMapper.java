@@ -1,5 +1,8 @@
 package dao;
 
+import java.util.List;
+import java.util.Map;
+
 import entity.QuestionnaireMain;
 
 public interface QuestionnaireMainMapper {
@@ -14,4 +17,8 @@ public interface QuestionnaireMainMapper {
     int updateByPrimaryKeySelective(QuestionnaireMain record);
 
     int updateByPrimaryKey(QuestionnaireMain record);
+    
+    Map<String,Long> selectCount(Map<String,Object> parm);
+    
+    List<QuestionnaireMain> selectPage(Map<String,Object> parm);
 }
