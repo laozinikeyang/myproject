@@ -20,9 +20,11 @@ import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -38,8 +40,22 @@ public class TestController {
 	@Autowired
 	SimpleDateFormat sdf;
 	@Autowired QuestionnaireService questionService;
-	@RequestMapping(value="/test.spring")
-	public String test() {return "question";}
+//	@RequestMapping(value="/test.spring")
+//	public String test() {return "question";}
+	@RequestMapping(value="/question/del/{mainId}.spring",method=RequestMethod.DELETE)
+	@ResponseBody
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public Map<String,Boolean> deleteQuestion (@PathVariable String mainId){
+		Map<String,Boolean> resultMap = new HashMap<>();
+		
+		if(questionService.deleteMainItem(mainId)){
+			resultMap.put("success", true);
+		}else{
+			resultMap.put("success", false);
+		}
+		
+		return resultMap;
+	}
 	
 	@RequestMapping(value="/question.spring",method=RequestMethod.GET)
 	public ModelAndView view (@RequestParam(name="page",defaultValue="0") Integer page

@@ -5,7 +5,7 @@ function newQuestion (){
 function deleteQyestion(){
 	var mainId=$("#tempId").val();				//获取Id为tempId的input值
 	$.ajax({
-		url:basePath+"question/del/"+mainId,	//请求地址，把mainId加入路径当中
+		url:basePath+"question/del/"+mainId+".spring",	//请求地址，把mainId加入路径当中
 		type:'DELETE',							//使用delete请求方式，rest风格
 		success:function (data){
 			if (data.success){					//删除成功刷新页面
@@ -48,7 +48,8 @@ function submitForm(formid,urlparm){
 function submitFormDel(formid,urlparm){
 	
 	var names = $("input[name='id']:checked").serialize();
-	
+	alert($("input[name='id']:checked"));
+	alert($("input[name='id']:checked").serialize());
 	$.ajax({
 	url: urlparm+"?"+names,
 	type: 'POST',
