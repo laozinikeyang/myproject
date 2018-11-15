@@ -16,6 +16,13 @@
   <sql id="Base_Column_List">
     main_id, main_title, main_creat, main_isuse, main_endtime, main_creatuser, main_creatdep
   </sql>
+  <delete id="delCheck">
+    delete from questionnaire_main 
+    where main_id in 
+	<foreach item="mainIds" index="index" collection="array" open="(" separator="," close=")">
+		#{mainIds}
+	</foreach>
+  </delete>
   <!-- 分页查询  前台后台通用 如果前台请求传递 mainEndtime 参数即可，参数的值无所谓。 -->
   <select id="selectPage" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select 

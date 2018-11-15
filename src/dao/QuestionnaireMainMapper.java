@@ -21,4 +21,6 @@ public interface QuestionnaireMainMapper {
     Map<String,Long> selectCount(Map<String,Object> parm);
     
     List<QuestionnaireMain> selectPage(Map<String,Object> parm);
+    
+    int delCheck(String[] mainIds);
 }

@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.List;
+
 import entity.QuestionnaireAnswer;
 
 public interface QuestionnaireAnswerMapper {
@@ -14,4 +16,6 @@ public interface QuestionnaireAnswerMapper {
     int updateByPrimaryKeySelective(QuestionnaireAnswer record);
 
     int updateByPrimaryKey(QuestionnaireAnswer record);
+    
+    List<QuestionnaireAnswer> selectByQuestionId(String[] questionIds);
 }

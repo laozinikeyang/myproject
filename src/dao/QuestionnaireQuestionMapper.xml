@@ -12,6 +12,13 @@
   <sql id="Base_Column_List">
     question_id, question_title, question_creat, question_destype, question_type, main_id
   </sql>
+  <select id="selectByMainId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_question
+    where main_id = #{mainId,jdbcType=VARCHAR}
+    order by question_creat
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

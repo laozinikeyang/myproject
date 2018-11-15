@@ -13,6 +13,16 @@
   <sql id="Base_Column_List">
     answer_id, answer_value, answer_type, answer_destype, answer_text, question_id, answer_creat
   </sql>
+  <select id="selectByQuestionId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_answer
+    where question_id in
+    <foreach item="questionIds" index="index" collection="array" open="(" separator="," close=")">
+		#{questionIds}
+	</foreach>
+	ORDER BY answer_creat
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

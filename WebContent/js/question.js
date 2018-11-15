@@ -48,8 +48,6 @@ function submitForm(formid,urlparm){
 function submitFormDel(formid,urlparm){
 	
 	var names = $("input[name='id']:checked").serialize();
-	alert($("input[name='id']:checked"));
-	alert($("input[name='id']:checked").serialize());
 	$.ajax({
 	url: urlparm+"?"+names,
 	type: 'POST',
@@ -113,7 +111,7 @@ function pauseModel (mainId){
 
 function pause (){
 	$.ajax({
-		url:basePath+"question/pause/"+$("#temppauseMainId").val(),
+		url:basePath+"question/pause/"+$("#temppauseMainId").val()+".spring",
 		type:'PUT',
 		success:function (data){
 			if (data.success){
@@ -136,12 +134,11 @@ function actionModel (mainId){
 
 function actionStart (){
 	$.ajax({
-		url:basePath+"question/action/"+$("#tempActionMainId").val(),
+		url:basePath+"question/action/"+$("#tempActionMainId").val()+".spring",
 		type:'PUT',
 		success:function (data){
 			if (data.success){
 				$("#alertOK").modal();
-				window.location.reload();
 			}else{
 				var pText = document.getElementById("alertOKText");
 				pText.innerText = "发布失败";
@@ -182,7 +179,7 @@ function submitFormById (formId){
 
 function copyQuestion (mainId){
 	$.ajax({
-		url:basePath+"question/copy/"+mainId,
+		url:basePath+"question/copy/"+mainId+".spring",
 		type:'GET',
 		success:function (data){
 			if (data.success){

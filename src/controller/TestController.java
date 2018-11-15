@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -26,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-
 
 import entity.*;
 import service.QuestionnaireService;
@@ -42,6 +41,72 @@ public class TestController {
 	@Autowired QuestionnaireService questionService;
 //	@RequestMapping(value="/test.spring")
 //	public String test() {return "question";}
+	
+	
+	@RequestMapping(value="question/copy/{mainId}.spring",method=RequestMethod.GET)
+	@ResponseBody
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	@RequiresAuthentication
+	public Map<String,Boolean> copyQuestion (HttpServletRequest request,@PathVariable String mainId){
+		Map<String,Boolean> resultMap = new HashMap<>();
+		HttpSession session = request.getSession();
+//		Sys_login loginEntity = (Sys_login)session.getAttribute("loginEntity");
+		try{
+//			resultMap.put("success", questionService.updateCopyQuestion(mainId,loginEntity.getWxname()));
+			resultMap.put("success", questionService.updateCopyQuestion(mainId, "test"));
+		}catch(Exception e){
+			resultMap.put("success", false);
+		}
+		
+		return resultMap;
+	}
+	
+	
+	@RequestMapping(value="question/pause/{mainId}.spring",method=RequestMethod.PUT)
+	@ResponseBody
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public Map<String,Boolean> pause (@PathVariable String mainId){
+		Map<String,Boolean> resultMap = new HashMap<>();
+		
+		QuestionnaireMain record = new QuestionnaireMain();
+		record.setMainId(mainId);
+		record.setMainIsuse("n");
+		resultMap.put("success", questionService.updateMainAction(record));
+		
+		return resultMap;
+	}
+	
+	
+	@RequestMapping(value="question/action/{mainId}.spring",method=RequestMethod.PUT)
+	@ResponseBody
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public Map<String,Boolean> actionStart (@PathVariable String mainId){
+		Map<String,Boolean> resultMap = new HashMap<>();
+		
+		QuestionnaireMain record = new QuestionnaireMain();
+		record.setMainId(mainId);
+		record.setMainIsuse("y");
+		resultMap.put("success", questionService.updateMainAction(record));
+		
+		return resultMap;
+	}
+	
+	@RequestMapping(value="/question/delCheck.spring",method=RequestMethod.POST)
+	@ResponseBody
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public Map<String,Boolean> delCheck(HttpServletRequest request,String[] id){
+		
+		Map<String,Boolean> resultMap = new HashMap<>();
+
+		if (questionService.deleteCheck(id)){
+			resultMap.put("success", true);
+		}else{
+			resultMap.put("success", false);
+		}
+		
+		return resultMap;
+	}
+	
 	@RequestMapping(value="/question/del/{mainId}.spring",method=RequestMethod.DELETE)
 	@ResponseBody
 //	@RequiresRoles(value = { "admin" },logical=Logical.OR)

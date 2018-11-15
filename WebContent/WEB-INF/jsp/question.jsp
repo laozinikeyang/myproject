@@ -221,7 +221,7 @@
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-default" data-dismiss="modal">关闭</button>
-						<button class="btn btn-primary" onclick="submitFormDel('#delCheckForm','<%=basePath%>question/delCheck')">确定</button>
+						<button class="btn btn-primary" onclick="submitFormDel('#delCheckForm','<%=basePath%>question/delCheck.spring')">确定</button>
 					</div>
 				</div>
 			</div>
@@ -287,7 +287,7 @@
 						<p id="alertOKText">成功</p>
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button class="btn btn-default" data-dismiss="modal" onclick="javascript:location.reload();">关闭</button>
 					</div>
 				</div>
 			</div>
