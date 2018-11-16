@@ -39,8 +39,20 @@ public class TestController {
 	@Autowired
 	SimpleDateFormat sdf;
 	@Autowired QuestionnaireService questionService;
-//	@RequestMapping(value="/test.spring")
-//	public String test() {return "question";}
+//	@RequestMapping(value="/question1.spring")
+//	public String test() {return "editQuestionnaire";}
+	
+	
+	@RequestMapping(value="/question/edit/{mainId}.spring",method=RequestMethod.GET)
+	public ModelAndView editQuestion (@PathVariable String mainId){
+		ModelAndView mav = new ModelAndView("editQuestionnaire");
+		
+		Map<String, Object> questionnaire = questionService.selectQuestionnaire(mainId,false);
+		mav.addObject("questionnaire", questionnaire);
+		
+		return mav;
+	}
+	
 	
 	
 	@RequestMapping(value="question/copy/{mainId}.spring",method=RequestMethod.GET)

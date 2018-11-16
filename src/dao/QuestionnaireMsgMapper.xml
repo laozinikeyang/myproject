@@ -11,6 +11,12 @@
   <sql id="Base_Column_List">
     msg_id, msg_text, main_id, msg_creatuser, msg_creattime
   </sql>
+  <select id="selectByMainId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questionnaire_msg
+    where main_id = #{mainId,jdbcType=VARCHAR}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

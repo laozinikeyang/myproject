@@ -1,6 +1,8 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -9,19 +11,68 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dao.QuestionnaireAnswerMapper;
+import dao.QuestionnaireMsgMapper;
 import dao.QuestionnaireQuestionMapper;
 import entity.QuestionnaireAnswer;
 import entity.QuestionnaireMain;
+import entity.QuestionnaireMsg;
 import entity.QuestionnaireQuestion;
 
 @Service
 public class QuestionnaireService {
+	@Autowired
+	QuestionnaireMsgMapper msg;
 	@Autowired
 	QuestionnaireQuestionMapper qqm;
 	@Autowired
 	dao.QuestionnaireMainMapper qmm;
 	@Autowired
 	QuestionnaireAnswerMapper qam;
+	
+	
+	public Map<String,Object> selectQuestionnaire(String mainId,boolean isStatistic){
+		Map<String,Object> questionnaire  = new HashMap<String, Object>();  //返回模型
+		QuestionnaireMain qm = qmm.selectByPrimaryKey(mainId);	//根据mainId获取主表数据
+		//根据mainId获取问题参数
+		List<QuestionnaireQuestion> questions = qqm.selectByMainId(mainId);
+		//定义一个数组该数组用于保存答案id，为了查询答案
+		String[] questionIds = new String[questions.size()];
+		//迭代问题数据，填充questionIds数组
+		int i = 0;
+		for (QuestionnaireQuestion entity: questions){
+			questionIds[i] = entity.getQuestionId();
+			i++;
+		}
+		//定义一个List，获取答案
+		List<QuestionnaireAnswer> answers = new ArrayList<>();
+		if (questions.size()>0){
+			answers = qam.selectByQuestionId(questionIds);
+		}
+		//下面代码是为了实现百分比，所以获取一组答案总选择数
+		Map<String,Integer> counts = new HashMap<>();
+		for (QuestionnaireQuestion entity: questions){
+			String questionId = entity.getQuestionId();
+			Integer count = 0;
+			for (QuestionnaireAnswer answer :answers){
+				if (questionId.equals(answer.getQuestionId())){
+					count += answer.getAnswerValue();
+				}
+			}
+			counts.put(entity.getQuestionId(), count);
+		}
+		//如果是统计结果，那么我们获取questionnaire_msg数据
+		if (isStatistic){
+			List<QuestionnaireMsg> msgs=msg.selectByMainId(mainId);
+			questionnaire.put("msgs",msgs);
+		}
+		questionnaire.put("main", qm);				//模型当中存入主表信息
+		questionnaire.put("question", questions);	//模型当中存入问题信息
+		questionnaire.put("answer", answers);		//模型当中存入答案信息
+		questionnaire.put("counts", counts);		//模型当中存入问题下答案选择总数信息
+		
+		return questionnaire;
+	}
+	
 	public boolean deleteMainItem(String mainId) {
 
 		return qmm.deleteByPrimaryKey(mainId) == 1 ? true : false;

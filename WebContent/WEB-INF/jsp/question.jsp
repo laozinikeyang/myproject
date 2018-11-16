@@ -27,6 +27,7 @@
 <script src="jedate/jedate.js"></script>
 </head>
 <body>
+<%=basePath%>
 	<!-- 这是导航条 -->
 	<jsp:include page="./menu.jsp"></jsp:include>
 
@@ -163,7 +164,7 @@
 							<td class="text-center">
 								<div class="input-group-btn" id="ssdiv">
 									<button class="btn btn-primary" type="button" onclick="delModal('${item.mainId }')">删除</button>
-									<a href="<%=basePath %>question/edit/${item.mainId }" class="btn btn-info">编辑</a>
+									<a href="<%=basePath %>question/edit/${item.mainId }.spring" class="btn btn-info">编辑</a>
 									<button type="button" class="btn btn-warning" onclick="actionModel('${item.mainId }')">发布</button>
 									<button type="button" class="btn btn-warning" onclick="pauseModel('${item.mainId }')">停止</button>
 									<button type="button" class="btn btn-danger" onclick="copyQuestion('${item.mainId }')">复制</button>
