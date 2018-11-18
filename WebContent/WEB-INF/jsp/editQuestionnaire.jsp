@@ -33,7 +33,7 @@
 
 	<div class="container">
 		<a class="btn btn-primary" href="javascript:void(0)" onclick="openEditModel()" >增加问题</a>
-		<a class="btn btn-success" href="<%=basePath %>question" target="_self" >返回</a>
+		<a class="btn btn-success" href="<%=basePath %>question.spring" target="_self" >返回</a>
 		<table class="table">
 			<tr class="danger">
 				<th>
@@ -199,7 +199,7 @@
 						</button>
 					</div>
 					<div class="modal-body" id="editModalBody">
-						<form id="editAnswer" action="<%=basePath %>question/addQuestionTestAndFile" method="post" enctype="multipart/form-data" >
+						<form id="editAnswer" action="<%=basePath %>question/addQuestionTestAndFile.spring" method="post" enctype="multipart/form-data" >
 							<input type="hidden" id="mainId" name="mainId" value="${questionnaire.main.mainId}">
 							<div class="form-group">
 								<label>问题:</label>
@@ -235,7 +235,7 @@
 						</button>
 					</div>
 					<div class="modal-body" id="editModalBodyxg">
-						<form id="editAnswerxg" action="<%=basePath %>question/editQuestionTestAndFile" method="post" enctype="multipart/form-data" >
+						<form id="editAnswerxg" action="<%=basePath %>question/editQuestionTestAndFile.spring" method="post" enctype="multipart/form-data" >
 							<input type="hidden" id="mainId" name="mainId" value="${questionnaire.main.mainId}">
 							<input type="hidden" id="questionIdxg" name="questionId" value="">
 							<div class="form-group">

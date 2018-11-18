@@ -27,8 +27,7 @@
 <script src="jedate/jedate.js"></script>
 </head>
 <body>
-<%=basePath%>
-	<!-- 这是导航条 -->
+<!-- 这是导航条 -->
 	<jsp:include page="./menu.jsp"></jsp:include>
 
 	<div class="container">
@@ -168,7 +167,7 @@
 									<button type="button" class="btn btn-warning" onclick="actionModel('${item.mainId }')">发布</button>
 									<button type="button" class="btn btn-warning" onclick="pauseModel('${item.mainId }')">停止</button>
 									<button type="button" class="btn btn-danger" onclick="copyQuestion('${item.mainId }')">复制</button>
-									<a class="btn btn-success" href="<%=basePath %>question/statistics/${item.mainId }" target="_blank" >查看结果</a>
+									<a class="btn btn-success" href="<%=basePath %>question/statistics/${item.mainId }.spring" target="_blank" >查看结果</a>
 								</div>
 							</td>
 						</tr>	

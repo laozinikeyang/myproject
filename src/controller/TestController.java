@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -7,13 +9,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import entity.*;
@@ -41,6 +48,144 @@ public class TestController {
 	@Autowired QuestionnaireService questionService;
 //	@RequestMapping(value="/question1.spring")
 //	public String test() {return "editQuestionnaire";}
+	
+	
+	@RequestMapping(value="question/statistics/{mainId}.spring",method=RequestMethod.GET)
+	public ModelAndView statistics (@PathVariable String mainId){
+		ModelAndView mav = new ModelAndView("statistics");
+		
+		Map<String, Object> questionnaire = 
+				questionService.selectQuestionnaire(mainId,true);	//获取完整问卷
+		//把完整问卷放置于ModelAndView当中，这等同于放置在request域当中，方便JSP页面获取
+		mav.addObject("questionnaire", questionnaire);				
+		
+		return mav;
+	}
+	
+	
+	@RequestMapping(value="question/delWt/{questionId}.spring",method=RequestMethod.DELETE)
+	@ResponseBody
+	public Map<String,Boolean> delWt (@PathVariable String questionId){
+		
+		Map<String,Boolean> resultMap = new HashMap<>();
+		resultMap.put("success", questionService.delectQuestionAndAnswer(questionId));
+		
+		return resultMap;
+	}
+	
+	@RequestMapping(value="question/editQuestionTestAndFile.spring",method=RequestMethod.POST)
+	public ModelAndView editQuestionTestAndFile(MultipartHttpServletRequest request
+									,String mainId,String questionId) throws IOException{
+		//转发重定向前面使用了redirect前缀，为了让URL路径始终保持在编辑页面
+		ModelAndView mav = new ModelAndView("redirect:/question/edit/"+mainId+".spring");
+		//获取所有文字参数以Map的形式呈现
+		Map<String, String[]> parms = request.getParameterMap();
+		//获取文件参数以Map形式呈现
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+		//保存文件路径的Map
+		Map<String,String> resultFileMap = new HashMap<>();
+		//获取EntrySet，Entry是Map的键值对。
+		Set<Entry<String, MultipartFile>> parmEntrySet = fileMap.entrySet();
+		//使用for循环迭代文件并上传文件
+		for (Entry<String, MultipartFile> tempEntry : parmEntrySet){
+			MultipartFile mf = tempEntry.getValue();
+			if (mf.getSize()>0){
+				//设置文件名称，为避免重复使用UUID
+				String newFileName = UUID.randomUUID().toString();
+				//获取文件上传路径（绝对路径）
+				String ph = request.getSession().getServletContext()
+												.getRealPath("/upload");
+				//获取文件名的原始名称，即从客户端上传过来的文件名称
+				String oldFileName = mf.getOriginalFilename();
+				//截取扩展名
+				String ext = oldFileName.substring(oldFileName.lastIndexOf("."));
+				//拼接文件完成路径
+				StringBuffer sb = new StringBuffer(ph).append("/file/");
+				sb.append(newFileName).append(ext);
+				File file = new File(sb.toString());
+				//调用调用org.apache.commons.io.FileUtils的copyInputStreamToFile写入文件
+				FileUtils.copyInputStreamToFile(mf.getInputStream(), file);
+				//获取文件相对路径
+				String filepath = new StringBuffer("upload/file/").append(newFileName)
+																.append(ext).toString();
+				//使用Map保存路径，键为前台传递过来的guid，值为上传文件的相对路径
+				resultFileMap.put(tempEntry.getKey(), filepath);
+			}
+		}
+		//调用Service层updateQuestionAndAnswers方法更新问题与答案
+		questionService.updateQuestionAndAnswers(mainId, resultFileMap, parms);
+		
+		return mav;
+	}
+	
+	
+	@RequestMapping(value="question/editMainTitle.spring",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Boolean> editMainTitle (String mainId,String mainTitle,String mainEndtime){
+		//通过@ResponseBody注解可以将返回的Map转换为json格式
+		Map<String,Boolean> resultMap = new HashMap<>();
+		//调用service层当中的updateMainTitle方法进行插入或修改操作。
+		resultMap.put("success", questionService.updateMainTitle(mainId, mainTitle,mainEndtime));
+
+		return resultMap;
+	}
+	
+	
+	@RequestMapping(value="question/editQuestionnaire/{questionId}.spring",method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String,Object> editQuestionnaire(@PathVariable String questionId){
+	System.out.println("controller");
+		return questionService.selectQuestionByIdToAnswer(questionId);
+	}
+	
+	
+	
+	@RequestMapping(value="question/addQuestionTestAndFile.spring",method=RequestMethod.POST)
+	public ModelAndView addQuestionTestAndFile(MultipartHttpServletRequest request
+													,String mainId) throws IOException{
+		//转发重定向前面使用了redirect前缀，为了让URL路径始终保持在编辑页面
+		ModelAndView mav = new ModelAndView("redirect:/question/edit/"+mainId+".spring");
+		//获取所有文字参数以Map的形式呈现
+		Map<String, String[]> parms = request.getParameterMap();
+		//获取文件参数以Map形式呈现
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+		//保存文件路径的Map
+		Map<String,String> resultFileMap = new HashMap<>();
+		//获取EntrySet，Entry是Map的键值对。
+		Set<Entry<String, MultipartFile>> parmEntrySet = fileMap.entrySet();
+		//使用for循环迭代文件并上传文件
+		for (Entry<String, MultipartFile> tempEntry : parmEntrySet){
+			MultipartFile mf = tempEntry.getValue();
+			if (mf.getSize()>0){
+				//设置文件名称，为避免重复使用UUID
+				String newFileName = UUID.randomUUID().toString();
+				//获取文件上传路径（绝对路径）
+				String ph = request.getSession().getServletContext()
+												.getRealPath("/upload");
+				//获取文件名的原始名称，即从客户端上传过来的文件名称
+				String oldFileName = mf.getOriginalFilename();
+				//截取扩展名
+				String ext = oldFileName.substring(oldFileName.lastIndexOf("."));
+				//拼接文件完成路径
+				StringBuffer sb = new StringBuffer(ph).append("/file/");
+				sb.append(newFileName).append(ext);
+				File file = new File(sb.toString());
+				//调用调用org.apache.commons.io.FileUtils的copyInputStreamToFile写入文件
+				FileUtils.copyInputStreamToFile(mf.getInputStream(), file);
+				//获取文件相对路径
+				String filepath = new StringBuffer("upload/file/").append(newFileName)
+						.append(ext).toString();
+				//使用Map保存路径，键为前台传递过来的guid，值为上传文件的相对路径
+				resultFileMap.put(tempEntry.getKey(), filepath);
+			}
+		}
+		//调用Service层insertQuestionAndAnswers方法保存问题与答案
+		questionService.insertQuestionAndAnswers(mainId,resultFileMap,parms);
+
+		return mav;
+	}
+	
+	
 	
 	
 	@RequestMapping(value="/question/edit/{mainId}.spring",method=RequestMethod.GET)

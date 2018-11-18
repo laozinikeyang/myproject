@@ -77,7 +77,7 @@ function delQuestionModal (QuestionId){
 function delWt (questionId){
 	
 	$.ajax({
-		url:basePath+"question/delWt/"+$("#tempQuestionId").val(),
+		url:basePath+"question/delWt/"+$("#tempQuestionId").val()+".spring",
 		type:'DELETE',
 		success:function (data){
 			if (data.success){
@@ -222,7 +222,7 @@ function editQuestionMainTitle (mainId){
 	var MainEndtime = $("#mainEndtimeInput").val();
 	
 	$.ajax({
-		url:basePath+"question/editMainTitle/",
+		url:basePath+"question/editMainTitle.spring",
 		type:'POST',
 		data:{mainId:mainId,
 			mainTitle:MainTitle,
@@ -288,9 +288,8 @@ function delAddAnswer(num) {
 function openEditModelxg (questionId){
 	$("#editModalxg").modal('show');
 	$("div[name='div_answersxg']").remove();
-	
 	$.ajax({
-		url:basePath+"question/editQuestionnaire/"+questionId,
+		url:basePath+"question/editQuestionnaire/"+questionId+".spring",
 		type:'GET',
 		success:function (data){
 			var answers = data.answers;
@@ -312,6 +311,7 @@ function openEditModelxg (questionId){
 						+"<input class='form-control' name='"+answers[i].answerId+"' type='text' value='"+tempAnswerDestype+"' />"
 						+"<div class='input-group-btn'><buttion class='btn btn-primary' type='button' onclick=\"delAddAnswerxg('"+guidr+"')\">删除</bution></div></div>"
 						+"<input type='file' name='"+answers[i].answerId+"' /></div>");
+				
 			}
 			answerPro.num = i+1;
 		}

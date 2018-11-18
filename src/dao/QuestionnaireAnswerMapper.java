@@ -6,7 +6,7 @@ import entity.QuestionnaireAnswer;
 
 public interface QuestionnaireAnswerMapper {
     int deleteByPrimaryKey(String answerId);
-
+    void deleteAll(String questionid);
     int insert(QuestionnaireAnswer record);
 
     int insertSelective(QuestionnaireAnswer record);

@@ -33,6 +33,10 @@
     delete from questionnaire_answer
     where answer_id = #{answerId,jdbcType=VARCHAR}
   </delete>
+  <delete id="deleteAll" >
+    delete from questionnaire_answer
+    where question_id = #{questionid,jdbcType=VARCHAR}
+  </delete>
   <insert id="insert" parameterType="entity.QuestionnaireAnswer">
     insert into questionnaire_answer (answer_id, answer_value, answer_type, 
       answer_destype, answer_text, question_id, 
