@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-
 import entity.*;
 import service.QuestionnaireService;
 import standard.Util;
@@ -49,6 +49,91 @@ public class TestController {
 //	@RequestMapping(value="/question1.spring")
 //	public String test() {return "editQuestionnaire";}
 	
+	
+	
+	@RequestMapping(value="question/actionSub.spring",method=RequestMethod.POST)
+	@ResponseBody
+//	@RequiresAuthentication
+	public Map<String,Boolean> actionSub (HttpServletRequest request){
+		Map<String,Boolean> resultMap = new HashMap<>();
+		
+		HttpSession session = request.getSession();
+		String username = (String)(session.getAttribute("UserName")!=null?session.getAttribute("UserName"):"");
+		String mainId = request.getParameter("mainId");
+		//Sys_login sysLoginEntity = (Sys_login)session.getAttribute("loginEntity");
+		
+//		if(questionService.selectMainUser(username,mainId)){
+		if(true){
+			String message = request.getParameter("message");
+			List<String> parms = new ArrayList<>();
+			Map<String, String[]> parm = request.getParameterMap();
+			Set<Entry<String, String[]>> entrySet = parm.entrySet();
+			for (Entry<String, String[]> entry : entrySet){
+				String[] answerIds = entry.getValue();
+				parms.addAll(Arrays.asList(answerIds));
+			}
+//			resultMap.put("success", questionService.updateValueIn(parms,username,mainId,message,sysLoginEntity.getWxname()));
+			resultMap.put("success", questionService.updateValueIn(parms,username,mainId,message,"test"));
+		}else{
+			resultMap.put("success", false);
+		}
+
+		return resultMap;
+	}
+	
+	
+	@RequestMapping(value="question/go/{mainId}.spring",method=RequestMethod.GET)
+	public ModelAndView goQuestionPage (HttpServletRequest request,@PathVariable String mainId){
+		
+		ModelAndView mav = new ModelAndView("lowquestion");
+		
+		HttpSession session = request.getSession();
+		String username = (String)session.getAttribute("UserName");
+		Boolean bflag = true; //questionService.selectMainUser(username, mainId);敞开权限更加合理
+		if (bflag){  // 这里判断的是如果用户回答过该问题则不进入该页面
+			mav.setViewName("lowquestion");
+			Map<String, Object> questionnaire = questionService.selectQuestionnaire(mainId,false);
+			mav.addObject("questionnaire", questionnaire);
+		}else{
+			mav.setViewName("lowpage/lowError");
+		}
+		return mav;
+	}
+	
+	@RequestMapping(value = "index.spring", method = RequestMethod.GET)
+	//@RequiresAuthentication	//验证通过用户可以登录
+	public ModelAndView home (HttpServletRequest request,@RequestParam(name="page",defaultValue="0") Integer page,@RequestParam(name="row",defaultValue="10")Integer row){
+		ModelAndView mav = new ModelAndView("index");
+		
+		Map<String,Object> parm = new HashMap<>();
+		if (page > 0){
+			parm.put("page", (page-1)*row);
+		}else{
+			parm.put("page", page);
+		}
+		parm.put("row", row);
+		parm.put("mainEndtime",new Date());
+		parm.put("mainIsuse","y");
+		List<QuestionnaireMain> mainList = questionService.findMainPage(parm);
+		Long count = questionService.findCount(parm);
+		Long temp= count%row;
+		Long countPage = 0L;
+		if (temp==0){
+			countPage = count/row;
+		}else{
+			countPage = count/row+1;
+		}
+		String currentPage = null;
+		if (page >0){
+			currentPage = ut.page(page, Integer.valueOf(countPage+""));
+		}else{
+			currentPage = ut.page(page+1, Integer.valueOf(countPage+""));
+		}
+		mav.addObject("mainList", mainList);
+		mav.addObject("currentPage", currentPage);
+		
+		return mav;
+	}
 	
 	@RequestMapping(value="question/statistics/{mainId}.spring",method=RequestMethod.GET)
 	public ModelAndView statistics (@PathVariable String mainId){
@@ -357,4 +442,4 @@ public class TestController {
 	}
 	
 	
-}
+	}

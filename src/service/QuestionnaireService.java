@@ -18,6 +18,7 @@ import dao.QuestionnaireMsgMapper;
 import dao.QuestionnaireQuestionMapper;
 import entity.QuestionnaireAnswer;
 import entity.QuestionnaireMain;
+import entity.QuestionnaireMainUserKey;
 import entity.QuestionnaireMsg;
 import entity.QuestionnaireQuestion;
 
@@ -33,6 +34,26 @@ public class QuestionnaireService {
 	QuestionnaireAnswerMapper qam;
 	@Autowired
 	SimpleDateFormat sdf;
+	
+public boolean updateValueIn(List<String> answerIds,String userId,String mainId,String message,String wxname){
+		
+	QuestionnaireMainUserKey qmuEntity = new QuestionnaireMainUserKey();
+		qmuEntity.setMainId(mainId);
+		qmuEntity.setUserId(userId);
+	
+		if (message != null && !"".equals(message)){
+			QuestionnaireMsg msgEntity = new QuestionnaireMsg();
+			msgEntity.setMsgId(UUID.randomUUID().toString());
+			msgEntity.setMainId(mainId);
+			msgEntity.setMsgText(message);
+			msgEntity.setMsgCreatuser(wxname);
+			msgEntity.setMsgCreattime(new Date());
+			msg.insert(msgEntity);
+		}
+		
+//		return qam.updateValueIn(answerIds)>=0&&qmum.insert(qmuEntity)==1&&qmm.updateMainCreat(mainId)==1;
+		return true;
+	}
 
 	public boolean delectQuestionAndAnswer(String questionId) {
 
