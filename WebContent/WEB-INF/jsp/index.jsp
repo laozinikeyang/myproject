@@ -104,7 +104,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 														
 															<a class="btn btn-info" href="<%=basePath %>question/go/${item.mainId }.spring" target="_blank" >参与投票</a>
 														
-														<a class="btn btn-success" href="<%=basePath %>question/statistics/${item.mainId }" target="_blank" >查看结果</a>
+														<a class="btn btn-success" href="<%=basePath %>question/statistics/${item.mainId }.spring" target="_blank" >查看结果</a>
 													</div>
 											</td>
 										</tr>	

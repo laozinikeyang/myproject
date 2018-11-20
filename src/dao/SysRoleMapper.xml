@@ -7,9 +7,20 @@
     <result column="role_des" jdbcType="VARCHAR" property="roleDes" />
     <result column="role_pid" jdbcType="INTEGER" property="rolePid" />
   </resultMap>
+  <resultMap id="BaseTreeResultMap" type="entity.Sys_roleTree" >
+    <id column="role_id" property="id" jdbcType="INTEGER" />
+    <result column="role_name" property="type" jdbcType="VARCHAR" />
+    <result column="role_des" property="name" jdbcType="VARCHAR" />
+    <result column="role_pid" property="pId" jdbcType="INTEGER" />
+  </resultMap>
   <sql id="Base_Column_List">
     role_id, role_name, role_des, role_pid
   </sql>
+   <select id="selectTreeAll" resultMap="BaseTreeResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

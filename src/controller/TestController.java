@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import dao.SysLoginMapper;
+import dao.SysRoleMapper;
 import entity.*;
 import service.QuestionnaireService;
 import standard.Util;
@@ -45,11 +47,82 @@ public class TestController {
 	private Util  ut;
 	@Autowired
 	SimpleDateFormat sdf;
-	@Autowired QuestionnaireService questionService;
-//	@RequestMapping(value="/question1.spring")
-//	public String test() {return "editQuestionnaire";}
+	@Autowired 
+	QuestionnaireService questionService;
+	@Autowired
+	SysRoleMapper roleService;
+	@Autowired
+	SysLoginMapper userloginService;
 	
 	
+	@RequestMapping(value="login/del/{loginId}.spring",method=RequestMethod.DELETE)
+	@ResponseBody
+	public Map<String,Boolean> delUser (@PathVariable Integer loginId){
+		Map<String,Boolean> resultMap = new HashMap<>();
+		
+		if (userloginService.deleteByPrimaryKey(loginId)==1){
+			resultMap.put("success", true);
+		}else{
+			resultMap.put("success", false);
+		}
+		
+		return resultMap;
+	}
+	
+	
+	
+	@RequestMapping(value="login/updateRole.spring",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Boolean> updateRole (Integer roleId,Integer loginId,String username){
+		System.out.println("controller:updateRole");
+		Map<String,Boolean> resultMap = new HashMap<>();
+		
+		Map<String,Object> parm = new HashMap<>();
+		parm.put("roleId", roleId);
+		parm.put("loginId", loginId);
+		parm.put("username", username);
+		if (userloginService.updateSys_login_roleSelective(parm)==1){
+			resultMap.put("success", true);
+		}else{
+			resultMap.put("success", false);
+		};
+		
+		return resultMap;
+	}
+	
+	
+	@RequestMapping(value="login/user.spring",method=RequestMethod.GET)
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public ModelAndView view (@RequestParam(name="page",defaultValue="0") Integer page,@RequestParam(name="row",defaultValue="10")Integer row){
+		ModelAndView mav = new ModelAndView("user");
+		List<Sys_roleTree> roles = roleService.selectTreeAll();
+		Map<String,Object> parm = new HashMap<>();
+		if (page > 0){
+			parm.put("page", (page-1)*row);
+		}else{
+			parm.put("page", page);
+		}
+		parm.put("row", row);
+		List<Map<String,Object>> mainList = questionService.selectLoginRole(parm);
+		Long count = userloginService.selectCount().get("count");
+		Long temp= count%row;
+		Long countPage = 0L;
+		if (temp==0){
+			countPage = count/row;
+		}else{
+			countPage = count/row+1;
+		}
+		String currentPage = null;
+		if (page >0){
+			currentPage = ut.page(page, Integer.valueOf(countPage+""));
+		}else{
+			currentPage = ut.page(page+1, Integer.valueOf(countPage+""));
+		}
+		mav.addObject("mainList", mainList);
+		mav.addObject("currentPage", currentPage);
+		mav.addObject("roles", roles);
+		return mav;
+	}
 	
 	@RequestMapping(value="question/actionSub.spring",method=RequestMethod.POST)
 	@ResponseBody

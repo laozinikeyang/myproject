@@ -1,5 +1,8 @@
 package dao;
 
+import java.util.List;
+import java.util.Map;
+
 import entity.SysLogin;
 
 public interface SysLoginMapper {
@@ -14,4 +17,10 @@ public interface SysLoginMapper {
     int updateByPrimaryKeySelective(SysLogin record);
 
     int updateByPrimaryKey(SysLogin record);
+    
+    Map<String,Long> selectCount();
+    
+    List<Map<String, Object>> selectLoginRole (Map<String,Object> parm);
+    
+    int updateSys_login_roleSelective(Map<String,Object> parm);
 }

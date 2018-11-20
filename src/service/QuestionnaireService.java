@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Map.Entry;
-
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +34,17 @@ public class QuestionnaireService {
 	QuestionnaireAnswerMapper qam;
 	@Autowired
 	SimpleDateFormat sdf;
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+	public List<Map<String, Object>> selectLoginRole(Map<String,Object> parm) {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> resultMap = new ArrayList<>();
+		String SQL = "select * from sys_login sl left join sys_login_role slr on (sl.login_id = slr.login_id) left join sys_role sr on (slr.role_id = sr.role_id) ORDER BY sl.login_id desc LIMIT ?,?";
+		resultMap = jdbcTemplate.queryForList(SQL,parm.get("page"),parm.get("row"));
+		
+		return resultMap;
+	}
+	
 	
 public boolean updateValueIn(List<String> answerIds,String userId,String mainId,String message,String wxname){
 		
