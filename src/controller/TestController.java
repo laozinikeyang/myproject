@@ -55,6 +55,42 @@ public class TestController {
 	SysLoginMapper userloginService;
 	
 	
+	@RequestMapping("role/editView.spring")
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public ModelAndView getEdit(HttpServletRequest request,HttpServletResponse response,SysRole role) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("role_per");
+		mav.addObject("entity", role);
+		/*List<Sys_role_permission> checked = sysRolPerService.selectByRoleName(role.getRoleName());
+		if (checked!=null){
+			mav.addObject("checked", checked);
+		}*/
+		return mav;
+	}
+	
+	
+	@RequestMapping("role/getTree.spring")
+	@ResponseBody
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public List<Sys_roleTree> getTree(HttpServletRequest request,HttpServletResponse response) {
+		System.out.println("controller:role/getTree.spring");
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
+	
+		List<Sys_roleTree> listRole = roleService.selectTreeAll();
+		
+		return listRole;
+	}
+	
+	@RequestMapping("role/mainView.spring")
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public ModelAndView getMainView (){
+		ModelAndView mav = new ModelAndView();
+		
+		mav.setViewName("role");
+		
+		return mav;
+	}
+	
 	@RequestMapping(value="login/del/{loginId}.spring",method=RequestMethod.DELETE)
 	@ResponseBody
 	public Map<String,Boolean> delUser (@PathVariable Integer loginId){
@@ -162,8 +198,8 @@ public class TestController {
 		
 		HttpSession session = request.getSession();
 		String username = (String)session.getAttribute("UserName");
-		Boolean bflag = true; //questionService.selectMainUser(username, mainId);³¨¿ªÈ¨ÏŞ¸ü¼ÓºÏÀí
-		if (bflag){  // ÕâÀïÅĞ¶ÏµÄÊÇÈç¹ûÓÃ»§»Ø´ğ¹ı¸ÃÎÊÌâÔò²»½øÈë¸ÃÒ³Ãæ
+		Boolean bflag = true; //questionService.selectMainUser(username, mainId);ï¿½ï¿½ï¿½ï¿½È¨ï¿½Ş¸ï¿½ï¿½Óºï¿½ï¿½ï¿½
+		if (bflag){  // ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¶Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ø´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò²»½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
 			mav.setViewName("lowquestion");
 			Map<String, Object> questionnaire = questionService.selectQuestionnaire(mainId,false);
 			mav.addObject("questionnaire", questionnaire);
@@ -174,7 +210,7 @@ public class TestController {
 	}
 	
 	@RequestMapping(value = "index.spring", method = RequestMethod.GET)
-	//@RequiresAuthentication	//ÑéÖ¤Í¨¹ıÓÃ»§¿ÉÒÔµÇÂ¼
+	//@RequiresAuthentication	//ï¿½ï¿½Ö¤Í¨ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ôµï¿½Â¼
 	public ModelAndView home (HttpServletRequest request,@RequestParam(name="page",defaultValue="0") Integer page,@RequestParam(name="row",defaultValue="10")Integer row){
 		ModelAndView mav = new ModelAndView("index");
 		
@@ -213,8 +249,8 @@ public class TestController {
 		ModelAndView mav = new ModelAndView("statistics");
 		
 		Map<String, Object> questionnaire = 
-				questionService.selectQuestionnaire(mainId,true);	//»ñÈ¡ÍêÕûÎÊ¾í
-		//°ÑÍêÕûÎÊ¾í·ÅÖÃÓÚModelAndViewµ±ÖĞ£¬ÕâµÈÍ¬ÓÚ·ÅÖÃÔÚrequestÓòµ±ÖĞ£¬·½±ãJSPÒ³Ãæ»ñÈ¡
+				questionService.selectQuestionnaire(mainId,true);	//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ModelAndViewï¿½ï¿½ï¿½Ğ£ï¿½ï¿½ï¿½ï¿½Í¬ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½requestï¿½ï¿½ï¿½Ğ£ï¿½ï¿½ï¿½ï¿½ï¿½JSPÒ³ï¿½ï¿½ï¿½È¡
 		mav.addObject("questionnaire", questionnaire);				
 		
 		return mav;
@@ -234,43 +270,43 @@ public class TestController {
 	@RequestMapping(value="question/editQuestionTestAndFile.spring",method=RequestMethod.POST)
 	public ModelAndView editQuestionTestAndFile(MultipartHttpServletRequest request
 									,String mainId,String questionId) throws IOException{
-		//×ª·¢ÖØ¶¨ÏòÇ°ÃæÊ¹ÓÃÁËredirectÇ°×º£¬ÎªÁËÈÃURLÂ·¾¶Ê¼ÖÕ±£³ÖÔÚ±à¼­Ò³Ãæ
+		//×ªï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½redirectÇ°×ºï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½URLÂ·ï¿½ï¿½Ê¼ï¿½Õ±ï¿½ï¿½ï¿½ï¿½Ú±à¼­Ò³ï¿½ï¿½
 		ModelAndView mav = new ModelAndView("redirect:/question/edit/"+mainId+".spring");
-		//»ñÈ¡ËùÓĞÎÄ×Ö²ÎÊıÒÔMapµÄĞÎÊ½³ÊÏÖ
+		//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Mapï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		Map<String, String[]> parms = request.getParameterMap();
-		//»ñÈ¡ÎÄ¼ş²ÎÊıÒÔMapĞÎÊ½³ÊÏÖ
+		//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Mapï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		Map<String, MultipartFile> fileMap = request.getFileMap();
-		//±£´æÎÄ¼şÂ·¾¶µÄMap
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Â·ï¿½ï¿½ï¿½ï¿½Map
 		Map<String,String> resultFileMap = new HashMap<>();
-		//»ñÈ¡EntrySet£¬EntryÊÇMapµÄ¼üÖµ¶Ô¡£
+		//ï¿½ï¿½È¡EntrySetï¿½ï¿½Entryï¿½ï¿½Mapï¿½Ä¼ï¿½Öµï¿½Ô¡ï¿½
 		Set<Entry<String, MultipartFile>> parmEntrySet = fileMap.entrySet();
-		//Ê¹ÓÃforÑ­»·µü´úÎÄ¼ş²¢ÉÏ´«ÎÄ¼ş
+		//Ê¹ï¿½ï¿½forÑ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½Ä¼ï¿½
 		for (Entry<String, MultipartFile> tempEntry : parmEntrySet){
 			MultipartFile mf = tempEntry.getValue();
 			if (mf.getSize()>0){
-				//ÉèÖÃÎÄ¼şÃû³Æ£¬Îª±ÜÃâÖØ¸´Ê¹ÓÃUUID
+				//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Æ£ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½Ê¹ï¿½ï¿½UUID
 				String newFileName = UUID.randomUUID().toString();
-				//»ñÈ¡ÎÄ¼şÉÏ´«Â·¾¶£¨¾ø¶ÔÂ·¾¶£©
+				//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½Ï´ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
 				String ph = request.getSession().getServletContext()
 												.getRealPath("/upload");
-				//»ñÈ¡ÎÄ¼şÃûµÄÔ­Ê¼Ãû³Æ£¬¼´´Ó¿Í»§¶ËÉÏ´«¹ıÀ´µÄÎÄ¼şÃû³Æ
+				//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ô­Ê¼ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½Ó¿Í»ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
 				String oldFileName = mf.getOriginalFilename();
-				//½ØÈ¡À©Õ¹Ãû
+				//ï¿½ï¿½È¡ï¿½ï¿½Õ¹ï¿½ï¿½
 				String ext = oldFileName.substring(oldFileName.lastIndexOf("."));
-				//Æ´½ÓÎÄ¼şÍê³ÉÂ·¾¶
+				//Æ´ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 				StringBuffer sb = new StringBuffer(ph).append("/file/");
 				sb.append(newFileName).append(ext);
 				File file = new File(sb.toString());
-				//µ÷ÓÃµ÷ÓÃorg.apache.commons.io.FileUtilsµÄcopyInputStreamToFileĞ´ÈëÎÄ¼ş
+				//ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½org.apache.commons.io.FileUtilsï¿½ï¿½copyInputStreamToFileĞ´ï¿½ï¿½ï¿½Ä¼ï¿½
 				FileUtils.copyInputStreamToFile(mf.getInputStream(), file);
-				//»ñÈ¡ÎÄ¼şÏà¶ÔÂ·¾¶
+				//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 				String filepath = new StringBuffer("upload/file/").append(newFileName)
 																.append(ext).toString();
-				//Ê¹ÓÃMap±£´æÂ·¾¶£¬¼üÎªÇ°Ì¨´«µİ¹ıÀ´µÄguid£¬ÖµÎªÉÏ´«ÎÄ¼şµÄÏà¶ÔÂ·¾¶
+				//Ê¹ï¿½ï¿½Mapï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÇ°Ì¨ï¿½ï¿½ï¿½İ¹ï¿½ï¿½ï¿½ï¿½ï¿½guidï¿½ï¿½ÖµÎªï¿½Ï´ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 				resultFileMap.put(tempEntry.getKey(), filepath);
 			}
 		}
-		//µ÷ÓÃService²ãupdateQuestionAndAnswers·½·¨¸üĞÂÎÊÌâÓë´ğ°¸
+		//ï¿½ï¿½ï¿½ï¿½Serviceï¿½ï¿½updateQuestionAndAnswersï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		questionService.updateQuestionAndAnswers(mainId, resultFileMap, parms);
 		
 		return mav;
@@ -280,9 +316,9 @@ public class TestController {
 	@RequestMapping(value="question/editMainTitle.spring",method=RequestMethod.POST)
 	@ResponseBody
 	public Map<String,Boolean> editMainTitle (String mainId,String mainTitle,String mainEndtime){
-		//Í¨¹ı@ResponseBody×¢½â¿ÉÒÔ½«·µ»ØµÄMap×ª»»Îªjson¸ñÊ½
+		//Í¨ï¿½ï¿½@ResponseBody×¢ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½Øµï¿½Map×ªï¿½ï¿½Îªjsonï¿½ï¿½Ê½
 		Map<String,Boolean> resultMap = new HashMap<>();
-		//µ÷ÓÃservice²ãµ±ÖĞµÄupdateMainTitle·½·¨½øĞĞ²åÈë»òĞŞ¸Ä²Ù×÷¡£
+		//ï¿½ï¿½ï¿½ï¿½serviceï¿½ãµ±ï¿½Ğµï¿½updateMainTitleï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ²ï¿½ï¿½ï¿½ï¿½ï¿½Ş¸Ä²ï¿½ï¿½ï¿½ï¿½ï¿½
 		resultMap.put("success", questionService.updateMainTitle(mainId, mainTitle,mainEndtime));
 
 		return resultMap;
@@ -301,43 +337,43 @@ public class TestController {
 	@RequestMapping(value="question/addQuestionTestAndFile.spring",method=RequestMethod.POST)
 	public ModelAndView addQuestionTestAndFile(MultipartHttpServletRequest request
 													,String mainId) throws IOException{
-		//×ª·¢ÖØ¶¨ÏòÇ°ÃæÊ¹ÓÃÁËredirectÇ°×º£¬ÎªÁËÈÃURLÂ·¾¶Ê¼ÖÕ±£³ÖÔÚ±à¼­Ò³Ãæ
+		//×ªï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½redirectÇ°×ºï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½URLÂ·ï¿½ï¿½Ê¼ï¿½Õ±ï¿½ï¿½ï¿½ï¿½Ú±à¼­Ò³ï¿½ï¿½
 		ModelAndView mav = new ModelAndView("redirect:/question/edit/"+mainId+".spring");
-		//»ñÈ¡ËùÓĞÎÄ×Ö²ÎÊıÒÔMapµÄĞÎÊ½³ÊÏÖ
+		//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Mapï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		Map<String, String[]> parms = request.getParameterMap();
-		//»ñÈ¡ÎÄ¼ş²ÎÊıÒÔMapĞÎÊ½³ÊÏÖ
+		//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Mapï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 		Map<String, MultipartFile> fileMap = request.getFileMap();
-		//±£´æÎÄ¼şÂ·¾¶µÄMap
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Â·ï¿½ï¿½ï¿½ï¿½Map
 		Map<String,String> resultFileMap = new HashMap<>();
-		//»ñÈ¡EntrySet£¬EntryÊÇMapµÄ¼üÖµ¶Ô¡£
+		//ï¿½ï¿½È¡EntrySetï¿½ï¿½Entryï¿½ï¿½Mapï¿½Ä¼ï¿½Öµï¿½Ô¡ï¿½
 		Set<Entry<String, MultipartFile>> parmEntrySet = fileMap.entrySet();
-		//Ê¹ÓÃforÑ­»·µü´úÎÄ¼ş²¢ÉÏ´«ÎÄ¼ş
+		//Ê¹ï¿½ï¿½forÑ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½Ä¼ï¿½
 		for (Entry<String, MultipartFile> tempEntry : parmEntrySet){
 			MultipartFile mf = tempEntry.getValue();
 			if (mf.getSize()>0){
-				//ÉèÖÃÎÄ¼şÃû³Æ£¬Îª±ÜÃâÖØ¸´Ê¹ÓÃUUID
+				//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Æ£ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½Ê¹ï¿½ï¿½UUID
 				String newFileName = UUID.randomUUID().toString();
-				//»ñÈ¡ÎÄ¼şÉÏ´«Â·¾¶£¨¾ø¶ÔÂ·¾¶£©
+				//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½Ï´ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
 				String ph = request.getSession().getServletContext()
 												.getRealPath("/upload");
-				//»ñÈ¡ÎÄ¼şÃûµÄÔ­Ê¼Ãû³Æ£¬¼´´Ó¿Í»§¶ËÉÏ´«¹ıÀ´µÄÎÄ¼şÃû³Æ
+				//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ô­Ê¼ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½Ó¿Í»ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
 				String oldFileName = mf.getOriginalFilename();
-				//½ØÈ¡À©Õ¹Ãû
+				//ï¿½ï¿½È¡ï¿½ï¿½Õ¹ï¿½ï¿½
 				String ext = oldFileName.substring(oldFileName.lastIndexOf("."));
-				//Æ´½ÓÎÄ¼şÍê³ÉÂ·¾¶
+				//Æ´ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 				StringBuffer sb = new StringBuffer(ph).append("/file/");
 				sb.append(newFileName).append(ext);
 				File file = new File(sb.toString());
-				//µ÷ÓÃµ÷ÓÃorg.apache.commons.io.FileUtilsµÄcopyInputStreamToFileĞ´ÈëÎÄ¼ş
+				//ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½org.apache.commons.io.FileUtilsï¿½ï¿½copyInputStreamToFileĞ´ï¿½ï¿½ï¿½Ä¼ï¿½
 				FileUtils.copyInputStreamToFile(mf.getInputStream(), file);
-				//»ñÈ¡ÎÄ¼şÏà¶ÔÂ·¾¶
+				//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 				String filepath = new StringBuffer("upload/file/").append(newFileName)
 						.append(ext).toString();
-				//Ê¹ÓÃMap±£´æÂ·¾¶£¬¼üÎªÇ°Ì¨´«µİ¹ıÀ´µÄguid£¬ÖµÎªÉÏ´«ÎÄ¼şµÄÏà¶ÔÂ·¾¶
+				//Ê¹ï¿½ï¿½Mapï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÇ°Ì¨ï¿½ï¿½ï¿½İ¹ï¿½ï¿½ï¿½ï¿½ï¿½guidï¿½ï¿½ÖµÎªï¿½Ï´ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 				resultFileMap.put(tempEntry.getKey(), filepath);
 			}
 		}
-		//µ÷ÓÃService²ãinsertQuestionAndAnswers·½·¨±£´æÎÊÌâÓë´ğ°¸
+		//ï¿½ï¿½ï¿½ï¿½Serviceï¿½ï¿½insertQuestionAndAnswersï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		questionService.insertQuestionAndAnswers(mainId,resultFileMap,parms);
 
 		return mav;
@@ -480,7 +516,7 @@ public class TestController {
 		return mav;
 	}
 	/**
-	 * ±£´æÎÊ¾íÖ÷Ò³Ãæ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ò³ï¿½ï¿½
 	 * @param mainTitle
 	 * @return
 	 * @throws ParseException 
@@ -489,26 +525,26 @@ public class TestController {
 	public ModelAndView newQuestion (
 			HttpServletRequest request,String mainTitle,String mainEndtime) 
 																throws ParseException{
-			//·µ»ØModelAndView²¢½«ÊÓÍ¼Ö¸Ïòquestion·½·¨ÖØĞÂ»ñÈ¡Êı¾İ
+			//ï¿½ï¿½ï¿½ï¿½ModelAndViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Ö¸ï¿½ï¿½questionï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 			ModelAndView mav = new ModelAndView("redirect:question.spring");
-			QuestionnaireMain main = new QuestionnaireMain();			//´´½¨ÊµÌåÀà
-			main.setMainId(UUID.randomUUID().toString());				//´´½¨ÊµÌåÀà
-			main.setMainIsuse("n");										//ÉèÖÃÊÇ·ñÊ¹ÓÃ£¬ÊÇ·ñ·¢²¼
-			main.setMainTitle(mainTitle);								//ÉèÖÃÎÊ¾í±êÌâ
-			main.setMainCreat(new Date());								//ÉèÖÃ´´½¨Ê±¼ä
-			HttpSession session = request.getSession();					//»ñÈ¡session
-			//ÔÚsessionÖĞ»ñÈ¡ÓÃ»§ĞÅÏ¢£¬»ñÈ¡µ±Ç°ÓÃ»§ÕæÊµĞÕÃû
+			QuestionnaireMain main = new QuestionnaireMain();			//ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½
+			main.setMainId(UUID.randomUUID().toString());				//ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½
+			main.setMainIsuse("n");										//ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ê¹ï¿½Ã£ï¿½ï¿½Ç·ñ·¢²ï¿½
+			main.setMainTitle(mainTitle);								//ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+			main.setMainCreat(new Date());								//ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+			HttpSession session = request.getSession();					//ï¿½ï¿½È¡session
+			//ï¿½ï¿½sessionï¿½Ğ»ï¿½È¡ï¿½Ã»ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½Ã»ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½
 //			SysLogin loginEntity = (SysLogin)session.getAttribute("loginEntity");
 //			main.setMainCreatuser(loginEntity.getWxname());
 			main.setMainCreatuser("test");
-			//ÉèÖÃ½ØÖ¹Ê±¼ä
+			//ï¿½ï¿½ï¿½Ã½ï¿½Ö¹Ê±ï¿½ï¿½
 			if (mainEndtime!=null&&!"".equals(mainEndtime.trim())){
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				main.setMainEndtime(sdf.parse(mainEndtime));
 			}else{
 				main.setMainEndtime(new Date());
 			}
-			//µ÷ÓÃservice²ãinsertMain·½·¨£¬½«Êı¾İ±£´æÖÁÊı¾İ¿âÖĞ
+			//ï¿½ï¿½ï¿½ï¿½serviceï¿½ï¿½insertMainï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½
 			questionService.insertMain(main);
 			
 		return mav;

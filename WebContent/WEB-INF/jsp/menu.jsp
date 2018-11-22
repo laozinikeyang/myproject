@@ -27,9 +27,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<li><a href="<%=basePath %>index.spring">首页</a></li>
 								<li><a href="<%=basePath %>login/user.spring">权限设置</a></li>
 								<li><a href="<%=basePath %>question.spring">维护问卷</a></li>
-								<li><a href="<%=basePath %>role/mainView">角色设置</a></li>
-								<li><a href="<%=basePath %>question/me">我的问卷</a></li>
-								<li><a href="<%=basePath %>per/mainView">权限设置</a></li>
+								<li><a href="<%=basePath %>role/mainView.spring">角色设置</a></li>
+								<li><a href="<%=basePath %>question/me.spring">我的问卷</a></li>
+								<li><a href="<%=basePath %>per/mainView.spring">权限设置</a></li>
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
 								<li>
