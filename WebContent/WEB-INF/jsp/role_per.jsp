@@ -33,7 +33,7 @@
     var setting = {
 			async: {
 				enable: true,
-				url:"<%=basePath%>role/getTreeCheck.do?roleName=${entity.roleName}"
+				url:"<%=basePath%>role/getTreeCheck.spring?roleName=${entity.roleName}"
 			},data: {
 				simpleData: {
 					enable:true,
@@ -67,7 +67,7 @@
     		}
     		 $.ajax({
     		     type: 'POST',
-    		     url: "<%=basePath%>role/addRolePer.do",
+    		     url: "<%=basePath%>role/addRolePer.spring",
     		     data: {
     		    	roleId:${entity.roleId},
     		    	perparm:parm,

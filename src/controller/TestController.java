@@ -15,6 +15,7 @@ import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -35,10 +36,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+
 import dao.SysLoginMapper;
 import dao.SysRoleMapper;
 import entity.*;
 import service.QuestionnaireService;
+import servicedao.Sys_permissionService;
+import servicedao.Sys_permissionTreeService;
+import servicedao.Sys_role_permissionService;
 import standard.Util;
 @Transactional
 @Controller
@@ -53,6 +58,67 @@ public class TestController {
 	SysRoleMapper roleService;
 	@Autowired
 	SysLoginMapper userloginService;
+	
+	@Resource
+	Sys_permissionService perService;
+	@Resource
+	Sys_permissionTreeService perTreeService;
+	@Resource
+	Sys_role_permissionService sysRolPerService;
+	
+	@RequestMapping("role/addView.spring")
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public ModelAndView getAdd(HttpServletRequest request,HttpServletResponse response,Sys_roleTree role) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("roleadd");
+		return mav;
+	}
+	
+	
+	
+	@RequestMapping("role/editFieldView.spring")
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public ModelAndView getEditField(HttpServletRequest request,HttpServletResponse response,SysRole role) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("entity", role);
+		
+		return mav;
+	}
+	
+	
+	@RequestMapping("role/addRolePer.spring")
+	@ResponseBody
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public Map<String,String> addRolePer(HttpServletRequest request,HttpServletResponse response,String roleName,Integer roleId,String perparm) {
+		Map<String,String> mav = new HashMap<String, String>();
+		String[] splitParm = perparm.split(",");
+		int i = 4;
+		if (i>0){
+			sysRolPerService.updateRolPer(roleName, roleId, splitParm);
+			mav.put("success", "OK");
+			mav.put("msg", "保存成功");
+		}else{
+			mav.put("success", "NO");
+			mav.put("msg", "保存失败");
+		}
+		return mav;
+	}
+	
+	
+	
+	@RequestMapping("role/getTreeCheck.spring")
+	@ResponseBody
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public List<Sys_permissionTree> getTreeCheck(HttpServletRequest request,HttpServletResponse response,String roleName) {
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
+		
+		List<Sys_permissionTree> listPer = null;
+		
+		listPer = perTreeService.selectAll();
+		
+		return perTreeService.checked(listPer, roleName);
+	}
+	
 	
 	
 	@RequestMapping("role/editView.spring")

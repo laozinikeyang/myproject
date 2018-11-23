@@ -98,7 +98,7 @@
     	function addTreeNode(){
     		if (zTree.getSelectedNodes()[0]) {
 				var node = zTree.getSelectedNodes()[0];
-				$("#testIframe").attr("src","<%=basePath%>role/addView.do");
+				$("#testIframe").attr("src","<%=basePath%>role/addView.spring");
 			} else {
 				//zTree.addNodes(null, newNode);
 			}
@@ -163,7 +163,7 @@ div#rMenu ul li {
 				</td>
 				<td width="770px" align="left" valign="top"><iframe
 						id="testIframe" name="testIframe" frameborder="0" scrolling="AUTO"
-						width="100%" height="600px" SRC="<%=basePath%>treeIframe.jsp"></iframe>
+						width="100%" height="600px" SRC="<%=basePath%>jsp/treeIframe.jsp"></iframe>
 				</td>
 			</tr>
 		</table>
