@@ -11,9 +11,18 @@
   <resultMap id="CountMap" type="java.util.Map" >
     <result column="count" property="count" jdbcType="INTEGER" />
   </resultMap>
+  
+  
   <sql id="Base_Column_List">
     login_id, username, password, email, wxname
   </sql>
+  
+   <select id="selectByUsername" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_login
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
   
    <update id="updateSys_login_roleSelective" parameterType="java.util.Map" >
     update sys_login_role

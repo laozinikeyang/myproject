@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-
 import dao.SysLoginMapper;
 import dao.SysRoleMapper;
 import entity.*;
@@ -65,6 +64,121 @@ public class TestController {
 	Sys_permissionTreeService perTreeService;
 	@Resource
 	Sys_role_permissionService sysRolPerService;
+	
+	
+	@RequestMapping("per/edit.spring")
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public ModelAndView edit(HttpServletRequest request,HttpServletResponse response,SysPermission per) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("peredit");
+		
+		int i = perService.updateByPrimaryKey(per);
+		if (i>0){
+			mav.addObject("entity", per);
+			mav.addObject("success", "OK");
+			mav.addObject("msg", "保存成功");
+			request.getServletContext().setAttribute("per", perTreeService.selectAll());
+		}else{
+			mav.addObject("entity", per);
+			mav.addObject("success", "NO");
+			mav.addObject("msg", "保存失败");
+		}
+		return mav;
+	}
+	
+	
+	
+	@RequestMapping("per/editView.spring")
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public ModelAndView getEdit(HttpServletRequest request,HttpServletResponse response,SysPermission per) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("peredit");
+		mav.addObject("entity", per);
+		return mav;
+	}
+	
+	
+
+	@RequestMapping("per/getTree.spring")
+	@ResponseBody
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public List<Sys_permissionTree> getTree1(HttpServletRequest request,HttpServletResponse response) {
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
+		List<Sys_permissionTree> listPer = perTreeService.selectAll();
+		return listPer;
+	}
+	
+	
+	
+	@RequestMapping("per/mainView.spring")
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	public ModelAndView getMainView1(){
+		ModelAndView mav = new ModelAndView();
+		
+		mav.setViewName("per");
+		
+		return mav;
+	}
+	
+	
+	
+	@RequestMapping(value="/question/me.spring",method=RequestMethod.GET)
+//	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	@RequiresAuthentication
+	public ModelAndView meView (HttpServletRequest request,@RequestParam(name="page",defaultValue="0") Integer page,@RequestParam(name="row",defaultValue="10")Integer row,String mainTitle,String mainStartTime,String mainOverTime) throws ParseException{
+		ModelAndView mav = new ModelAndView("questionMe");
+		
+		HttpSession session = request.getSession();
+		
+//		SysLogin loginEntity = (SysLogin)session.getAttribute("loginEntity");
+		SysLogin loginEntity=new SysLogin();
+		loginEntity.setUsername("明日科技");
+		Map<String,Object> parm = new HashMap<>();
+		if (loginEntity != null){
+			parm.put("mainCreatuser", loginEntity.getWxname());
+		}else{
+			String username = (String)session.getAttribute("UserName");  //特殊情况下，服务器重新启动但是shiro登陆并没有超时，那么会有一定几率异常。
+			loginEntity = userloginService.selectByUsername(username);
+			session.setAttribute("loginEntity", loginEntity);
+			parm.put("mainCreatuser", loginEntity.getWxname());
+		}
+		if (page > 0){
+			parm.put("page", (page-1)*row);
+		}else{
+			parm.put("page", page);
+		}
+		parm.put("row", row);
+		if (mainTitle!=null&&!"".equals(mainTitle.trim())){
+			parm.put("mainTitle", mainTitle);
+		}
+		if (mainStartTime!=null&&Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}").matcher(mainTitle).matches()){
+			parm.put("mainStartTime", sdf.parse(mainStartTime));
+		}
+		if (mainOverTime!=null&&Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}").matcher(mainTitle).matches()){
+			parm.put("mainOverTime", sdf.parse(mainOverTime));
+		}
+		List<QuestionnaireMain> mainList = questionService.findMainPage(parm);
+		Long count = questionService.findCount(parm);
+		Long temp= count%row;
+		Long countPage = 0L;
+		if (temp==0){
+			countPage = count/row;
+		}else{
+			countPage = count/row+1;
+		}
+		String currentPage = null;
+		if (page >0){
+			currentPage = ut.page(page, Integer.valueOf(countPage+""));
+		}else{
+			currentPage = ut.page(page+1, Integer.valueOf(countPage+""));
+		}
+		mav.addObject("mainList", mainList);
+		mav.addObject("currentPage", currentPage);
+		
+		return mav;
+	}
+	
+	
 	
 	@RequestMapping("role/addView.spring")
 //	@RequiresRoles(value = { "admin" },logical=Logical.OR)
