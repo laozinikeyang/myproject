@@ -77,6 +77,7 @@
 	     <property name="realm" ref="jdbcRealm"></property>  
 	     <property name="cacheManager" ref="cacheManager"></property>  
 	 </bean> 
+	 <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
 	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
         <property name="securityManager" ref="securityManager"/>  
       </bean>  
@@ -86,11 +87,14 @@
 	     <!-- 要求登录时的链接(登录页面地址)，非必须的属性，默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->  
 	     <property name="loginUrl" value="/login.jsp"></property>  
 	     <!-- 登录成功后要跳转的连接(本例中此属性用不到，因为登录成功后的处理逻辑在LoginController里硬编码) -->  
-	     <property name="successUrl" value="/index" ></property>  
+	     <property name="successUrl" value="/index.spring" ></property>  
 	     <!-- 用户访问未对其授权的资源时，所显示的连接 -->  
 	     <property name="unauthorizedUrl" value="/"></property>  
 	     <property name="filterChainDefinitions">  
 	         <value>  
+	         /login/verification.spring=anon
+	        /** = authc
+	        
 	             <!-- /index=authc
 	             /question=roles["admin"]
 	             /question/**=roles["admin"] -->

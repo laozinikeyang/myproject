@@ -96,7 +96,7 @@ public class TestController {
 				SysLogin loginEntity = userloginService.selectByUsername(username);
 				session.setAttribute("UserName", username);
 				session.setAttribute("loginEntity", loginEntity);
-				mav.setViewName("redirect:/index");
+				mav.setViewName("redirect:/index.spring");
 			}catch(IncorrectCredentialsException e) {  
 		        msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";  
 		        model.addAttribute("message", msg);  
