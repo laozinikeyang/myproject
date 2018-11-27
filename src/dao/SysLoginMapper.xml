@@ -17,6 +17,51 @@
     login_id, username, password, email, wxname
   </sql>
   
+  
+  <select id="selectPage" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_login
+    order by login_id desc
+    limit #{page,jdbcType=INTEGER},#{row,jdbcType=INTEGER}
+  </select>
+  
+  <insert id="insertSys_login_roleSelective" parameterType="java.util.Map" >
+    insert into sys_login_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="role_id != null" >
+        role_id,
+      </if>
+      <if test="login_id != null" >
+        login_id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="role_id != null" >
+        #{role_id,jdbcType=INTEGER},
+      </if>
+      <if test="login_id != null" >
+        #{login_id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  
+  <select id="selectByUsernameCount" resultMap="CountMap" parameterType="java.lang.String" >
+    select 
+    count(login_id) as count
+    from sys_login
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+  
+  
    <select id="selectByUsername" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

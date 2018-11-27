@@ -24,16 +24,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						</div>
 						<div id="navbar" class="navbar-collapse collapse">
 							<ul class="nav navbar-nav">
+							 
 								<li><a href="<%=basePath %>index.spring">首页</a></li>
+							<shiro:hasPermission name="jsszDH">
+							
 								<li><a href="<%=basePath %>login/user.spring">权限设置</a></li>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="wjdcDH">
 								<li><a href="<%=basePath %>question.spring">维护问卷</a></li>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="sfqxDH">
 								<li><a href="<%=basePath %>role/mainView.spring">角色设置</a></li>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="wjdcME">
 								<li><a href="<%=basePath %>question/me.spring">我的问卷</a></li>
+								</shiro:hasPermission>
+									<shiro:hasRole name="admin">
 								<li><a href="<%=basePath %>per/mainView.spring">权限设置</a></li>
+							
+								
+								</shiro:hasRole>
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
 								<li>
-									<a href="<%=basePath %>login/logout" target="_self">退出登录</a>
+									<a href="<%=basePath %>login/logout.spring" target="_self">退出登录</a>
 								</li>
 							</ul>
 						</div>

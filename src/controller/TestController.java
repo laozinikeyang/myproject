@@ -46,19 +46,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-
 import dao.SysLoginMapper;
 import dao.SysRoleMapper;
 import entity.*;
 import service.QuestionnaireService;
+import service.Sys_loginService;
 import servicedao.Sys_permissionService;
 import servicedao.Sys_permissionTreeService;
 import servicedao.Sys_role_permissionService;
 import standard.Util;
 import utils.MD5;
+import utils.ValidataUtil;
 @Transactional
 @Controller
 public class TestController {
+	
+	@Resource
+	Sys_loginService userloginService;
 	@Autowired
 	private Util  ut;
 	@Autowired
@@ -67,8 +71,6 @@ public class TestController {
 	QuestionnaireService questionService;
 	@Autowired
 	SysRoleMapper roleService;
-	@Autowired
-	SysLoginMapper userloginService;
 	
 	@Resource
 	Sys_permissionService perService;
@@ -77,7 +79,49 @@ public class TestController {
 	@Resource
 	Sys_role_permissionService sysRolPerService;
 	
+	@RequestMapping(value="login/register.spring")
+    public ModelAndView register(HttpServletRequest request,String username , String password ,String repassword , String email , String wxname) {
+    	ModelAndView mav = new ModelAndView("redirect:/login.jsp");
+    	
+    	if (username!=null&&!"".equals(username.trim())&&username.length()<20&&password!=null&&!"".equals(password.trim())&&(password.equals(repassword))){
+    		
+    		Long count = userloginService.selectByUsernameCount(username).get("count");
+    		if (0==count){
+    			SysLogin entity = new SysLogin();
+    			entity.setUsername(username);
+    			entity.setPassword(MD5.md5(password));
+    			if (email!=null&&!"".equals(email.trim())&&ValidataUtil.isEmail(email)){
+    				entity.setEmail(email);
+    			}
+    			
+    			if (wxname!=null&&!"".equals(wxname.trim())){
+    				entity.setWxname(wxname);
+    			}
+    			
+    			if(userloginService.insertSelective(entity)>0){
+    				mav.addObject("msg", "注册成功");
+    			}
+    		}else{
+    			mav.addObject("msg", "注册失败");
+    		}
+    	}
+    	
+    	return mav;    	
+    }
 	
+	
+	
+	
+	@RequestMapping("login/logout.spring")
+	public ModelAndView logout() {
+		ModelAndView mav = new ModelAndView("redirect:/login.jsp");
+		
+		Subject subject = SecurityUtils.getSubject();
+		if (subject.isAuthenticated()) {
+			subject.logout(); // session 会销毁，在SessionListener监听session销毁，清理权限缓存
+		}
+		return mav;
+	}
 	
 	@RequestMapping(value="login/verification.spring")
 	public ModelAndView login(HttpServletRequest request,String username , String password ,@RequestParam(defaultValue="0000") String verifyCode, Model model) {

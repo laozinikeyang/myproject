@@ -24,4 +24,10 @@ public interface SysLoginMapper {
     int updateSys_login_roleSelective(Map<String,Object> parm);
     
     SysLogin selectByUsername(String username);
+    
+    Map<String,Long> selectByUsernameCount(String username);
+    
+    int insertSys_login_roleSelective(Map<String,Object> parm);
+    
+    List<SysLogin> selectPage(Map<String, Object> parm);
 }

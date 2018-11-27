@@ -166,7 +166,7 @@ function register (){
 				</button>
 			</div>
 			<div class="modal-body" >
-			<form id="registerform" action="<%=basePath %>login/register.do" method="post">
+			<form id="registerform" action="<%=basePath %>login/register.spring" method="post">
 				<div class="form-group">
 					<div class="col-xs-12  ">
 						<div class="input-group">
