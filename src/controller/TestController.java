@@ -31,6 +31,7 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -233,6 +234,7 @@ public class TestController {
 	
 	@RequestMapping("per/mainView.spring")
 //	@RequiresRoles(value = { "admin" },logical=Logical.OR)
+	@RequiresPermissions(value = { "jsszDH" })
 	public ModelAndView getMainView1(){
 		ModelAndView mav = new ModelAndView();
 		

@@ -28,12 +28,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<li><a href="<%=basePath %>index.spring">首页</a></li>
 							<shiro:hasPermission name="jsszDH">
 							
-								<li><a href="<%=basePath %>login/user.spring">权限设置</a></li>
+								<li><a href="<%=basePath %>login/user.spring">权限设置1</a></li>
 								</shiro:hasPermission>
-								<shiro:hasPermission name="wjdcDH">
+							<shiro:hasPermission name="wjdcDH">
 								<li><a href="<%=basePath %>question.spring">维护问卷</a></li>
-								</shiro:hasPermission>
-								<shiro:hasPermission name="sfqxDH">
+							</shiro:hasPermission>
+							<shiro:hasPermission name="sfqxDH">
 								<li><a href="<%=basePath %>role/mainView.spring">角色设置</a></li>
 								</shiro:hasPermission>
 								<shiro:hasPermission name="wjdcME">
