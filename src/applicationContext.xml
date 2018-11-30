@@ -77,6 +77,7 @@
 	     <property name="realm" ref="jdbcRealm"></property>  
 	     <property name="cacheManager" ref="cacheManager"></property>  
 	 </bean> 
+	 <!-- 这里要指定代理spring代理否则shiro controller报错 -->
 	 <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
 	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
         <property name="securityManager" ref="securityManager"/>  
